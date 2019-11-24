@@ -10,6 +10,7 @@ from torch.utils.data import Dataset, DataLoader, Subset
 from torchvision import transforms
 from torchvision.models import densenet121
 import numpy as np
+import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 from PIL import Image
 
@@ -26,11 +27,16 @@ MOMENT = .9
 BATCH_SIZE = 8
 N_EPOCHS = 50
 
+
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # And using various transforms provided by:
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
-# TODO: Define DataSet class
+
+# TODO: Data Augmentation?
+#   flipping probably wouldn't work well.
+#   neither would rotation, unless fairly small rotations?
+#   Color adjustments?
 
 preprocessing = transforms.Compose([
     transforms.Resize((600, 600)),
@@ -49,7 +55,7 @@ data_training = ()
 indices = list(range(len(data_validation)))
 np.random.shuffle(indices)
 
-# Downsample to 30 percercent of available entries
+# Downsample to 30% of available training data
 # TODO: downsample after shuffle?
 # indices = indices[:int(len(data_validation)*.3)]
 
@@ -79,6 +85,51 @@ criterion = nn.BCEWithLogitsLoss()
 print("Training Starting")
 training_start = time.time()
 
+
+# function for performing forward propagation
+def simple_forward_propagation(model, optimizer, criterion, local_image, local_label):
+    optimizer.zero_grad()
+    logits = model(local_image)
+    return criterion(logits, local_label)
+
+# function assumes images and labels are pytorch data objects
+def minibatch_training_step(
+        model,
+        images,
+        labels,
+        forward_propagation,
+        optimizer,
+        criterion,
+        device):
+    # move images and labels to device
+    local_images, local_labels = images.to(device, dtype=torch.float), \
+                                 labels.to(device, dtype=torch.float)
+
+    # forward
+    loss = forward_propagation(
+        model,
+        optimizer,
+        criterion,
+        local_images,
+        local_labels
+    )
+    print("\t\tLoss: {}".format(loss))
+
+    # backward
+    loss.backward()
+
+    # update
+    optimizer.step()
+    return loss.item()
+
+
+def evaluation(model, images, labels, criterion):
+    local_images, local_labels = images.to(device, dtype=torch.float), \
+                                 labels.to(device, dtype=torch.float)
+    y_validation_pred = model(local_images)
+    return criterion(y_validation_pred, local_labels).item()
+
+
 # loss per epoch aggregation variables
 loss_training_agg = []
 loss_validation_agg = []
@@ -86,6 +137,7 @@ for epoch in range(N_EPOCHS):
     # Reduce training rate every 10 epochs
     # TODO: Should we?
     # TODO: Similar for momentum parameter?
+    # TODO: Could make of torch optim schedulers for this
     # if epoch % 10 == 0:
     #     LR = LR/2
     #     optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
@@ -96,36 +148,37 @@ for epoch in range(N_EPOCHS):
     print("\tStarting Training")
 
     model.train()
-    for i, sample in enumerate(training_loader):
+    # assuming loader will return image, label tuple
+    for i, (images, labels) in enumerate(training_loader):
         print("\tMiniBatch {}:".format(i))
         minibatch_start = time.time()
-        local_image, local_label = sample['image'].to(device, dtype=torch.float), \
-                                   sample['labels'].to(device, dtype=torch.float)
 
-        # forward
-        optimizer.zero_grad()
-        logits = model(local_image)
-        loss = criterion(logits, local_label)
-        print("\t\tLoss: {}".format(loss))
+        minibatch_loss = minibatch_training_step(
+            model,
+            images,
+            labels,
+            simple_forward_propagation,
+            optimizer,
+            criterion,
+            device
+        )
 
-        # backward
-        loss.backward()
-
-        # update
-        optimizer.step()
-        loss_training.append(loss.item())
+        loss_training.append(minibatch_loss)
+        print("\t\tLoss: {}".format(minibatch_loss))
         print("\t\tCompute Time: {}".format(time.time() - minibatch_start))
 
     print('\tEvaluating Model...')
     model.eval()
     with torch.no_grad():
         loss_validation = []
-        for samples in validation_loader:
-            local_images, local_labels = sample['image'].to(device, dtype=torch.float), \
-                                         sample['labels'].to(device, dtype=torch.float)
-            y_validation_pred = model(local_images)
-            loss = criterion(y_validation_pred, local_labels)
-            loss_validation.append(loss.item())
+        for (images, labels) in validation_loader:
+            loss = evaluation(
+                model,
+                images,
+                labels,
+                criterion
+            )
+            loss_validation.append(loss)
 
     loss_training_calc = sum(loss_training) / len(loss_training)
     loss_validation_calc = sum(loss_validation) / len(loss_validation)
