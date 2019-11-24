@@ -50,9 +50,6 @@ preprocessing = transforms.Compose([
 
 # Construct DataSet class for validation and training
 # Note: thinking to keep them separate to support data augmentations
-# TODO: Construct custom DataSet classes
-# TODO: Should probably load metadata sepparately to avoid
-#   additional memory overhead??
 data_validation = ChexpertDataset(
     csv_file='../Data/train.csv',
     root_dir='../Data',

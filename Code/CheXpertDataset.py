@@ -35,7 +35,7 @@ class ChexpertDataset(Dataset):
         self.df = pd.read_csv(csv_file)
         self.root_dir = root_dir
         self.label_transform = label_transform
-        self.image_transforms = image_transform
+        self.image_transform = image_transform
 
     def __len__(self):
         return self.df.shape[0]
@@ -49,7 +49,7 @@ class ChexpertDataset(Dataset):
             label = self.label_transform(label)
 
         if self.image_transforms is not None:
-            im = self.image_transforms
+            im = self.image_transform
 
         return im, label
 
