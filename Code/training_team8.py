@@ -6,17 +6,12 @@
 import torch
 import torch.nn as nn
 import time
-from torch.utils.data import Dataset, DataLoader, Subset
-from torchvision import transforms
 from torchvision.models import densenet121
-from .CheXpertDataset import ChexpertDataset
 from .training_common_utils import training_loop
 from .training_common_utils import simple_forward_propagation as forward_propagation
 from .training_common_utils import simple_minibatch_training_step as minibatch_training_step
+from .training_common_utils import build_data_loaders
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import MultiLabelBinarizer
-from PIL import Image
 
 # %% --------------------------------------- Set-Up --------------------------------------------------------------------
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -41,47 +36,14 @@ N_EPOCHS = 50
 #   flipping probably wouldn't work well.
 #   neither would rotation, unless fairly small rotations?
 #   Color adjustments?
+data_loader_params = {
+    'batch_size': BATCH_SIZE,
+    'shuffle': True,  # why not.. *shrug*?
+    'num_workers': 12}
 
-preprocessing = transforms.Compose([
-    transforms.Resize((600, 600)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
-])
-
-# Construct DataSet class for validation and training
-# Note: thinking to keep them separate to support data augmentations
-data_validation = ChexpertDataset(
-    csv_file='../Data/train.csv',
-    root_dir='../Data',
-    image_transform=preprocessing
+training_loader, validation_loader = build_data_loaders(
+    data_loader_params
 )
-
-data_training = ChexpertDataset(
-    csv_file='../Data/train.csv',
-    root_dir='../Data',
-    image_transform=preprocessing
-)
-
-# Note: this assumes data_validation and data_training are the same size
-indices = list(range(len(data_validation)))
-np.random.shuffle(indices)
-
-# Downsample to 30% of available training data
-indices = indices[:int(len(data_validation)*.3)]
-
-# Note: after these two operations, data_validation and data_training
-#   will no longer be of equal lengths.
-# 30% of downsampled data will be used for validation, and 70% for training
-data_validation = Subset(data_validation, indices[:int(len(indices)*.3)])
-data_training = Subset(data_training, indices[int(len(indices)*.3):])
-
-# dataloader parameters
-params = {'batch_size': BATCH_SIZE,
-          'shuffle': True,  # why not.. *shrug*?
-          'num_workers': 12}
-
-training_loader = DataLoader(data_training, **params)
-validation_loader = DataLoader(data_validation, **params)
 
 # %% -------------------------------------- Training Prep ----------------------------------------------------------
 model = densenet121(num_classes=14).to(device)
