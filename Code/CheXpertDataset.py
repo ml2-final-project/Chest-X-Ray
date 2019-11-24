@@ -45,7 +45,6 @@ class ChexpertDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path = self.df.iloc[idx, 0]
-        # TODO this assumes data directory is called Data
-        image_path = image_path.replace("CheXpert-v1.0-small", "Data")
         im = Image.open(os.path.join(self.root_dir, image_path))
         return im, self.df.iloc[idx, 1:]
+
