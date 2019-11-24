@@ -1,12 +1,12 @@
 import os
 import pandas as pd
 from PIL import Image
+from torch.utils.data import Dataset
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # And using various transforms provided by:
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
-from torch.utils.data import Dataset
 
 
 class ChexpertDataset(Dataset):
