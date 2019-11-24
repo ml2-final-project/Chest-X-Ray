@@ -30,15 +30,12 @@ class ChexpertDataset(Dataset):
     def __init__(self,
                  csv_file,
                  root_dir,
-                 df_transform=None,
-                 image_transform=None):
+                 image_transform=None,
+                 label_transform=None):
         self.df = pd.read_csv(csv_file)
         self.root_dir = root_dir
-        self.df_transform = df_transform
+        self.label_transform = label_transform
         self.image_transforms = image_transform
-        # dataframe transforms happen at initial load
-        if self.df_transform is not None:
-            self.df = df_transform(self.df)
 
     def __len__(self):
         return self.df.shape[0]
@@ -46,5 +43,13 @@ class ChexpertDataset(Dataset):
     def __getitem__(self, idx):
         image_path = self.df.iloc[idx, 0]
         im = Image.open(os.path.join(self.root_dir, image_path))
-        return im, self.df.iloc[idx, 1:]
+        label = self.df.iloc[idx, 1:]
+
+        if self.label_transform is not None:
+            label = self.label_transform(label)
+
+        if self.image_transforms is not None:
+            im = self.image_transforms
+
+        return im, label
 
