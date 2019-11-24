@@ -48,8 +48,8 @@ class ChexpertDataset(Dataset):
         if self.label_transform is not None:
             label = self.label_transform(label)
 
-        if self.image_transforms is not None:
-            im = self.image_transform
+        if self.image_transform is not None:
+            im = self.image_transform(im)
 
         return im, label
 

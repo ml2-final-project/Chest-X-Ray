@@ -6,7 +6,7 @@ from .CheXpertDataset import ChexpertDataset
 from torchvision import transforms
 from torch.utils.data import Subset, DataLoader
 
-preprocessing = transforms.Compose([
+image_preprocessing = transforms.Compose([
     transforms.Resize((600, 600)),
     transforms.ToTensor(),
     transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
@@ -20,15 +20,15 @@ def build_data_loaders(dlparams):
     # Construct DataSet class for validation and training
     # Note: thinking to keep them separate to support possibility of data augmentations
     data_validation = ChexpertDataset(
-        csv_file='../Data/train.csv',
+        csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
-        image_transform=preprocessing
+        image_transform=image_preprocessing
     )
 
     data_training = ChexpertDataset(
-        csv_file='../Data/train.csv',
+        csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
-        image_transform=preprocessing
+        image_transform=image_preprocessing
     )
 
     # Note: this assumes data_validation and data_training are the same size
