@@ -1,20 +1,8 @@
 #!/bin/bash
 
-# assumes you have got the kaggle.json file from kaggle, using these instructions:
-#  https://github.com/Kaggle/kaggle-api
+wget -bqco download_kaggle_data.log "https://ml2-final-project-data.s3.amazonaws.com/sample.zip" -O sample.zip
 
-# put the file under ~/.kaggle/kaggle.json
-if [ ! -f /home/${USER}/.kaggle/kaggle.json ]; then
-	echo "kaggle.json file missing"
-	exit 1
-fi
-
-pip install kaggle --user kaggle
-
-~/.local/bin/kaggle datasets download  -p Data nih-chest-xrays/sample
-
-cd Data
-
-unzip -q sample.zip
-
-cd -
+echo "Download is proceeding in the background."
+echo "Should a problem occur, rerunning this script, will resume the download."
+echo "wget output is being directed to download_kaggle_data.log"
+echo "use 'tail -f download_kaggle_data.log' to check progress"
