@@ -55,7 +55,7 @@ class ChexpertDataset(Dataset):
         return im, label
 
 
-class ReplaceNaNTransform():
+class ReplaceNaNTransform:
     def __call__(self, sample):
         return sample[label_columns].fillna(-2)
 
