@@ -2,15 +2,27 @@ import torch
 import torch.nn as nn
 import time
 import numpy as np
-from .CheXpertDataset import ChexpertDataset
+from CheXpertDataset import ChexpertDataset, UZerosTransform, UOnesTransform, ReplaceNaNTransform
 from torchvision import transforms
 from torch.utils.data import Subset, DataLoader
 
-preprocessing = transforms.Compose([
+image_preprocessing = transforms.Compose([
     transforms.Resize((600, 600)),
     transforms.ToTensor(),
     transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
 ])
+
+label_preprocessing_uzeros = transforms.Compose([
+    UZerosTransform(),
+    ReplaceNaNTransform()
+])
+
+label_preprocessing_uones = transforms.Compose([
+    UOnesTransform(),
+    ReplaceNaNTransform()
+])
+
+label_preprocessing_umulticlass = ReplaceNaNTransform()
 
 
 # TODO: I imagine we'll want more args here for handling data loaders tied to other cases
@@ -20,15 +32,17 @@ def build_data_loaders(dlparams):
     # Construct DataSet class for validation and training
     # Note: thinking to keep them separate to support possibility of data augmentations
     data_validation = ChexpertDataset(
-        csv_file='../Data/train.csv',
+        csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
-        image_transform=preprocessing
+        image_transform=image_preprocessing,
+        label_transform=label_preprocessing_uzeros
     )
 
     data_training = ChexpertDataset(
-        csv_file='../Data/train.csv',
+        csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
-        image_transform=preprocessing
+        image_transform=image_preprocessing,
+        label_transform=label_preprocessing_uzeros
     )
 
     # Note: this assumes data_validation and data_training are the same size
