@@ -9,24 +9,25 @@ from torch.utils.data import Dataset
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
 
 
-class ChexpertDataset(Dataset):
-    label_columns = [
-        'No Finding',
-        'Enlarged Cardiomediastinum',
-        'Cardiomegaly',
-        'Lung Opacity',
-        'Lung Lesion',
-        'Edema',
-        'Consolidation',
-        'Pneumonia',
-        'Atelectasis',
-        'Pneumothorax',
-        'Pleural Effusion',
-        'Pleural Other',
-        'Fracture',
-        'Support Devices'
-    ]
+label_columns = [
+    'No Finding',
+    'Enlarged Cardiomediastinum',
+    'Cardiomegaly',
+    'Lung Opacity',
+    'Lung Lesion',
+    'Edema',
+    'Consolidation',
+    'Pneumonia',
+    'Atelectasis',
+    'Pneumothorax',
+    'Pleural Effusion',
+    'Pleural Other',
+    'Fracture',
+    'Support Devices'
+]
 
+
+class ChexpertDataset(Dataset):
     def __init__(self,
                  csv_file,
                  root_dir,
@@ -53,3 +54,17 @@ class ChexpertDataset(Dataset):
 
         return im, label
 
+
+class ReplaceNaNTransform():
+    def __call__(self, sample):
+        return sample[label_columns].fillna(-2)
+
+
+class UZerosTransform:
+    def __call__(self, sample):
+        return sample[label_columns].replace(-1, 0)
+
+
+class UOnesTransform:
+    def __call__(self, sample):
+        return sample[label_columns].replace(-1, 1)
