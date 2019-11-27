@@ -21,7 +21,7 @@ label_preprocessing_uzeros = transforms.Compose([
 
 label_preprocessing_uones = transforms.Compose([
     UOnesTransform(),
-    ReplaceNaNTransform(),
+    ReplaceNaNTransform()
 ])
 
 label_preprocessing_umulticlass = ReplaceNaNTransform()
