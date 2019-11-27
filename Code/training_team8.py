@@ -7,10 +7,7 @@ import torch
 import torch.nn as nn
 import time
 from torchvision.models import densenet121
-# from .training_common_utils import training_loop
-# from .training_common_utils import simple_forward_propagation as forward_propagation
-# from .training_common_utils import simple_minibatch_training_step as minibatch_training_step
-# from .training_common_utils import build_data_loaders
+from torch.optim import lr_scheduler
 from training_common_utils import training_loop
 from training_common_utils import simple_forward_propagation as forward_propagation
 from training_common_utils import simple_minibatch_training_step as minibatch_training_step
@@ -29,7 +26,6 @@ LR = 5e-3
 MOMENT = .9
 BATCH_SIZE = 8
 N_EPOCHS = 50
-
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
@@ -59,6 +55,8 @@ optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=.9)
 # TODO: Need to update this? possibly not.
 criterion = nn.BCEWithLogitsLoss()
 
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
+
 # %% -------------------------------------- Training Loop ----------------------------------------------------------
 print("Training Starting")
 training_start = time.time()
@@ -71,6 +69,7 @@ model, training_losses, validation_losses = training_loop(
     minibatch_training_step,
     optimizer,
     criterion,
+    scheduler,
     device,
     N_EPOCHS
 )

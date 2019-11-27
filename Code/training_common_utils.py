@@ -120,6 +120,7 @@ def training_loop(
         minibatch_training_step,
         optimizer,
         criterion,
+        scheduler,
         device,
         num_epochs
 ):
@@ -180,6 +181,9 @@ def training_loop(
 
         loss_training_calc = sum(loss_training) / len(loss_training)
         loss_validation_calc = sum(loss_validation) / len(loss_validation)
+
+        if scheduler is not None:
+            scheduler.step(loss_validation_calc)
 
         loss_training_agg.append(loss_training_calc)
         loss_validation_agg.append(loss_validation_calc)
