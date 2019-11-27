@@ -16,7 +16,7 @@ image_preprocessing = transforms.Compose([
 
 label_preprocessing_uzeros = transforms.Compose([
     UZerosTransform(),
-    ReplaceNaNTransform(),
+    ReplaceNaNTransform()
 ])
 
 label_preprocessing_uones = transforms.Compose([
