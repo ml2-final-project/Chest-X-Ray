@@ -14,15 +14,9 @@ image_preprocessing = transforms.Compose([
     transforms.Normalize((0, 0, 0), (1.0, 1.0, 1.0))
 ])
 
-label_preprocessing_uzeros = transforms.Compose([
-    UZerosTransform(),
-    ReplaceNaNTransform()
-])
+label_preprocessing_uzeros = UZerosTransform()
 
-label_preprocessing_uones = transforms.Compose([
-    UOnesTransform(),
-    ReplaceNaNTransform()
-])
+label_preprocessing_uones = UOnesTransform()
 
 label_preprocessing_umulticlass = ReplaceNaNTransform()
 
