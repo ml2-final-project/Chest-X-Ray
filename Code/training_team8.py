@@ -7,10 +7,14 @@ import torch
 import torch.nn as nn
 import time
 from torchvision.models import densenet121
-from .training_common_utils import training_loop
-from .training_common_utils import simple_forward_propagation as forward_propagation
-from .training_common_utils import simple_minibatch_training_step as minibatch_training_step
-from .training_common_utils import build_data_loaders
+# from .training_common_utils import training_loop
+# from .training_common_utils import simple_forward_propagation as forward_propagation
+# from .training_common_utils import simple_minibatch_training_step as minibatch_training_step
+# from .training_common_utils import build_data_loaders
+from training_common_utils import training_loop
+from training_common_utils import simple_forward_propagation as forward_propagation
+from training_common_utils import simple_minibatch_training_step as minibatch_training_step
+from training_common_utils import build_data_loaders
 import numpy as np
 
 # %% --------------------------------------- Set-Up --------------------------------------------------------------------
@@ -47,6 +51,7 @@ training_loader, validation_loader = build_data_loaders(
 
 # %% -------------------------------------- Training Prep ----------------------------------------------------------
 model = densenet121(num_classes=14).to(device)
+model.avgpool = nn.AdaptiveAvgPool2d(1)
 
 # TODO: Hyperparameter training for best LR, momentum settings?
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=.9)
