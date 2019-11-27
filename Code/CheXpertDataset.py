@@ -54,7 +54,7 @@ class ChexpertDataset(Dataset):
         label = self.df.iloc[idx, 1:]
         if self.label_transform is not None:
             # label = self.label_transform(label.values)
-            self.label_transform(label)
+            label = self.label_transform(label)
 
         if self.image_transform is not None:
             im = self.image_transform(im)
@@ -64,21 +64,21 @@ class ChexpertDataset(Dataset):
 
 class ReplaceNaNTransform:
     def __call__(self, sample):
-        sample[label_columns].fillna(-2)
-        return sample
+        return sample[label_columns].fillna(-2)
+
 
 class UZerosTransform:
     def __call__(self, sample):
-        sample[label_columns].replace(-1, 0)
-        return sample
-        # return sample[label_columns].replace(-1, 0)
+        # sample[label_columns].replace(-1, 0)
+        # return sample
+        return sample[label_columns].replace(-1, 0)
 
 
 class UOnesTransform:
     def __call__(self, sample):
-        sample[label_columns].replace(-1, 1)
-        return sample
-        # return sample[label_columns].replace(-1, 1)
+        # sample[label_columns].replace(-1, 1)
+        # return sample
+        return sample[label_columns].replace(-1, 1)
 
 class GreyScale_to_RGB:
     def __call__(self,im):
