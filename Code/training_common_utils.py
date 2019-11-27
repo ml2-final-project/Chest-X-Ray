@@ -1,15 +1,17 @@
 import torch
 import torch.nn as nn
 import time
+import pandas as pd
 import numpy as np
-from CheXpertDataset import ChexpertDataset, UZerosTransform, UOnesTransform, ReplaceNaNTransform
+from CheXpertDataset import ChexpertDataset, UZerosTransform, UOnesTransform, ReplaceNaNTransform, GreyScale_to_RGB
 from torchvision import transforms
 from torch.utils.data import Subset, DataLoader
 
 image_preprocessing = transforms.Compose([
+    # GreyScale_to_RGB(),
     transforms.Resize((600, 600)),
     transforms.ToTensor(),
-    transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
+    transforms.Normalize((0, 0, 0), (1.0, 1.0, 1.0))
 ])
 
 label_preprocessing_uzeros = transforms.Compose([
@@ -44,7 +46,6 @@ def build_data_loaders(dlparams):
         image_transform=image_preprocessing,
         label_transform=label_preprocessing_uzeros
     )
-
     # Note: this assumes data_validation and data_training are the same size
     indices = list(range(len(data_validation)))
     np.random.shuffle(indices)
@@ -66,6 +67,8 @@ def build_data_loaders(dlparams):
 
 # function for performing forward propagation
 def simple_forward_propagation(model, optimizer, criterion, local_image, local_label):
+    print(local_image.shape)
+    print(local_label)
     optimizer.zero_grad()
     logits = model(local_image)
     return criterion(logits, local_label)
@@ -140,7 +143,9 @@ def training_loop(
 
         model.train()
         # assuming loader will return image, label tuple
+        print("The type of training_loader is:",type(training_loader))
         for i, (images, labels) in enumerate(training_loader):
+            images = images.squeeze(0)
             print("\tMiniBatch {}:".format(i))
             minibatch_start = time.time()
 
@@ -163,6 +168,7 @@ def training_loop(
         with torch.no_grad():
             loss_validation = []
             for (images, labels) in validation_loader:
+                images = images.squeeze(0)
                 loss = evaluation(
                     model,
                     images,
