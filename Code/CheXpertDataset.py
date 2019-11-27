@@ -1,11 +1,9 @@
 import os
 import pandas as pd
 import numpy as np
-from PIL import Image
 import torch
 import tensorflow as tf
-import math
-from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
+from keras.preprocessing.image import load_img
 from torch.utils.data import Dataset
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
@@ -48,12 +46,10 @@ class ChexpertDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path = self.df.iloc[idx, 0]
-        # im = Image.open(os.path.join(self.root_dir, image_path))
         im = load_img(os.path.join(self.root_dir, image_path),target_size=(600,600), interpolation='nearest')
 
         label = self.df.iloc[idx, 1:]
         if self.label_transform is not None:
-            # label = self.label_transform(label.values)
             label = self.label_transform(label)
 
         if self.image_transform is not None:
@@ -69,16 +65,16 @@ class ReplaceNaNTransform:
 
 class UZerosTransform:
     def __call__(self, sample):
-        # sample[label_columns].replace(-1, 0)
-        # return sample
-        return sample[label_columns].replace(-1, 0)
+        sample = sample[label_columns].replace(-1, 0)
+        sample = sample[label_columns].fillna(0)
+        return sample
 
 
 class UOnesTransform:
     def __call__(self, sample):
-        # sample[label_columns].replace(-1, 1)
-        # return sample
-        return sample[label_columns].replace(-1, 1)
+        sample = sample[label_columns].replace(-1, 1)
+        sample = sample[label_columns].fillna(0)
+        return sample
 
 class GreyScale_to_RGB:
     def __call__(self,im):
