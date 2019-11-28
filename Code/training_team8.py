@@ -55,7 +55,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=.9)
 # TODO: Need to update this? possibly not.
 criterion = nn.BCEWithLogitsLoss()
 
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', verbose=True)
 
 # %% -------------------------------------- Training Loop ----------------------------------------------------------
 print("Training Starting")
