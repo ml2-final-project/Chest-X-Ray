@@ -60,7 +60,7 @@ class ChexpertDataset(Dataset):
 
 class ReplaceNaNTransform:
     def __call__(self, sample):
-        return sample[label_columns].fillna(-2)
+        return sample[label_columns].fillna(0)
 
 
 class UZerosTransform:
