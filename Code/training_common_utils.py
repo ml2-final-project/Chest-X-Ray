@@ -3,6 +3,7 @@ import torch.nn as nn
 import time
 import pandas as pd
 import numpy as np
+import tensorflow as tf
 from CheXpertDataset import ChexpertDataset, UZerosTransform, UOnesTransform, ReplaceNaNTransform, GreyScale_to_RGB
 from torchvision import transforms
 from torch.utils.data import Subset, DataLoader
@@ -62,7 +63,7 @@ def build_data_loaders(dlparams):
 # function for performing forward propagation
 def simple_forward_propagation(model, optimizer, criterion, local_image, local_label):
     print(local_image.shape)
-    print(local_label)
+    print(local_label.shape)
     optimizer.zero_grad()
     logits = model(local_image)
     return criterion(logits, local_label)
@@ -118,6 +119,8 @@ def training_loop(
         device,
         num_epochs
 ):
+    # Lets initialize loss to some high value
+    min_loss = 100
 
     # loss per epoch aggregation variables
     loss_training_agg = []
@@ -140,7 +143,6 @@ def training_loop(
         # assuming loader will return image, label tuple
         print("The type of training_loader is:",type(training_loader))
         for i, (images, labels) in enumerate(training_loader):
-            images = images.squeeze(0)
             print("\tMiniBatch {}:".format(i))
             minibatch_start = time.time()
 
@@ -163,7 +165,6 @@ def training_loop(
         with torch.no_grad():
             loss_validation = []
             for (images, labels) in validation_loader:
-                images = images.squeeze(0)
                 loss = evaluation(
                     model,
                     images,
@@ -186,4 +187,10 @@ def training_loop(
             loss_training_calc, loss_validation_calc))
         print("\tEpoch Compute Time: {}".format(
             time.time() - epoch_start))
+        if(loss_training_calc < min_loss):
+            print("*******Loss imrpoved*******")
+            print("Saving the new best")
+            torch.save(model.state_dict(), 'model_team8.pt')
+            min_loss = loss_training_calc
+
     return model, loss_training_agg, loss_validation_agg

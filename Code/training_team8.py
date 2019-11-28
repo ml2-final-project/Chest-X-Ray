@@ -47,7 +47,6 @@ training_loader, validation_loader = build_data_loaders(
 
 # %% -------------------------------------- Training Prep ----------------------------------------------------------
 model = densenet121(num_classes=14).to(device)
-model.avgpool = nn.AdaptiveAvgPool2d(1)
 
 # TODO: Hyperparameter training for best LR, momentum settings?
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=.9)
@@ -77,7 +76,7 @@ model, training_losses, validation_losses = training_loop(
 print("Training Complete: {}s", time.time() - training_start)
 
 # save model first...
-torch.save(model.state_dict(), 'model_team8.pt')
+# torch.save(model.state_dict(), 'model_team8.pt')
 
 # let's plot stuff
 import matplotlib.pyplot as plt
