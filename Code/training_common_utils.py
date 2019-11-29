@@ -120,7 +120,7 @@ def training_loop(
         num_epochs
 ):
     # Lets initialize loss to some high value
-    min_loss = 100
+    min_train_loss = min_val_loss = 100
 
     # loss per epoch aggregation variables
     loss_training_agg = []
@@ -187,10 +187,11 @@ def training_loop(
             loss_training_calc, loss_validation_calc))
         print("\tEpoch Compute Time: {}".format(
             time.time() - epoch_start))
-        if(loss_training_calc < min_loss):
+        if((loss_training_calc < min_train_loss) | (loss_validation_calc < min_val_loss):
             print("*******Loss imrpoved*******")
             print("Saving the new best")
             torch.save(model.state_dict(), 'model_team8.pt')
-            min_loss = loss_training_calc
+            min_train_loss = min(min_train_loss,loss_training_calc)
+            min_val_loss = min(min_val_loss,loss_validation_calc)
 
     return model, loss_training_agg, loss_validation_agg
