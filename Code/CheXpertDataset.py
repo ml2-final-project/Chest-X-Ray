@@ -66,14 +66,12 @@ class ReplaceNaNTransform:
 class UZerosTransform:
     def __call__(self, sample):
         sample = sample[label_columns].replace(-1, 0)
-        sample = sample[label_columns].fillna(0)
         return sample
 
 
 class UOnesTransform:
     def __call__(self, sample):
         sample = sample[label_columns].replace(-1, 1)
-        sample = sample[label_columns].fillna(0)
         return sample
 
 class GreyScale_to_RGB:
