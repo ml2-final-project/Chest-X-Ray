@@ -12,7 +12,7 @@ from training_common_utils import training_loop
 from training_common_utils import simple_forward_propagation as forward_propagation
 from training_common_utils import simple_minibatch_training_step as minibatch_training_step
 from training_common_utils import build_data_loaders
-from training_common_utils import label_preprocessing_uzeros as base_label_transform
+from training_common_utils import label_preprocessing_uones as base_label_transform
 import numpy as np
 
 # %% --------------------------------------- Set-Up --------------------------------------------------------------------
@@ -26,7 +26,7 @@ torch.backends.cudnn.benchmark = False
 LR = 5e-3
 MOMENT = .9
 BATCH_SIZE = 16
-N_EPOCHS = 15
+N_EPOCHS = 4
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
@@ -72,13 +72,11 @@ model, training_losses, validation_losses = training_loop(
     criterion,
     scheduler,
     device,
-    N_EPOCHS
+    N_EPOCHS,
+    "model_team8_uones.pt"
 )
 
 print("Training Complete: {}s", time.time() - training_start)
-
-# save model first...
-# torch.save(model.state_dict(), 'model_team8.pt')
 
 # let's plot stuff
 import matplotlib.pyplot as plt
@@ -87,4 +85,4 @@ plt.plot(validation_losses, color='red')
 plt.title("Loss vs Epochs")
 plt.xlabel("Epoch")
 plt.ylabel("Binary Cross Entropy with Logits Loss")
-plt.savefig('loss_v_epochs.png')
+plt.savefig('loss_v_epochs_uones.png')

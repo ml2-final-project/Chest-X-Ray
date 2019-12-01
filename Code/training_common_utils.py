@@ -123,7 +123,8 @@ def training_loop(
         criterion,
         scheduler,
         device,
-        num_epochs
+        num_epochs,
+        model_name
 ):
     # Lets initialize loss to some high value
     min_train_loss = min_val_loss = 100
@@ -194,10 +195,10 @@ def training_loop(
             loss_training_calc, loss_validation_calc))
         print("\tEpoch Compute Time: {}".format(
             time.time() - epoch_start))
-        if loss_training_calc < min_train_loss or loss_validation_calc < min_val_loss:
+        if loss_validation_calc < min_val_loss:
             print("*******Loss imrpoved*******")
             print("Saving the new best")
-            torch.save(model.state_dict(), 'model_team8.pt')
+            torch.save(model.state_dict(), model_name)
             min_train_loss = min(min_train_loss, loss_training_calc)
             min_val_loss = min(min_val_loss, loss_validation_calc)
 
