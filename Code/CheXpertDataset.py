@@ -46,7 +46,7 @@ class ChexpertDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path = self.df.iloc[idx, 0]
-        im = load_img(os.path.join(self.root_dir, image_path),target_size=(600,600), interpolation='nearest')
+        im = load_img(os.path.join(self.root_dir, image_path), target_size=(600, 600), interpolation='nearest')
 
         label = self.df.iloc[idx, 1:]
         if self.label_transform is not None:
@@ -66,18 +66,16 @@ class ReplaceNaNTransform:
 class UZerosTransform:
     def __call__(self, sample):
         sample = sample[label_columns].replace(-1, 0)
-        sample = sample[label_columns].fillna(0)
         return sample
 
 
 class UOnesTransform:
     def __call__(self, sample):
         sample = sample[label_columns].replace(-1, 1)
-        sample = sample[label_columns].fillna(0)
         return sample
 
 class GreyScale_to_RGB:
-    def __call__(self,im):
+    def __call__(self, im):
         return tf.image.grayscale_to_rgb(
             im,
             name=None

@@ -15,9 +15,15 @@ image_preprocessing = transforms.Compose([
     transforms.Normalize((0, 0, 0), (1.0, 1.0, 1.0))
 ])
 
-label_preprocessing_uzeros = UZerosTransform()
+label_preprocessing_uzeros = transforms.Compose([
+    UZerosTransform(),
+    ReplaceNaNTransform()
+])
 
-label_preprocessing_uones = UOnesTransform()
+label_preprocessing_uones = transforms.Compose([
+    UOnesTransform(),
+    ReplaceNaNTransform()
+])
 
 label_preprocessing_umulticlass = ReplaceNaNTransform()
 
@@ -25,21 +31,21 @@ label_preprocessing_umulticlass = ReplaceNaNTransform()
 # TODO: I imagine we'll want more args here for handling data loaders tied to other cases
 #   and for more complicated logic regarding which transforms to use?
 #   should we build up a context type object?
-def build_data_loaders(dlparams):
+def build_data_loaders(base_label_transform, dlparams):
     # Construct DataSet class for validation and training
     # Note: thinking to keep them separate to support possibility of data augmentations
     data_validation = ChexpertDataset(
         csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
         image_transform=image_preprocessing,
-        label_transform=label_preprocessing_uzeros
+        label_transform=base_label_transform
     )
 
     data_training = ChexpertDataset(
         csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
         image_transform=image_preprocessing,
-        label_transform=label_preprocessing_uzeros
+        label_transform=base_label_transform
     )
     # Note: this assumes data_validation and data_training are the same size
     indices = list(range(len(data_validation)))
@@ -62,8 +68,8 @@ def build_data_loaders(dlparams):
 
 # function for performing forward propagation
 def simple_forward_propagation(model, optimizer, criterion, local_image, local_label):
-    print(local_image.shape)
-    print(local_label.shape)
+    #print(local_image.shape)
+    #print(local_label.shape)
     optimizer.zero_grad()
     logits = model(local_image)
     return criterion(logits, local_label)
@@ -117,7 +123,8 @@ def training_loop(
         criterion,
         scheduler,
         device,
-        num_epochs
+        num_epochs,
+        model_name
 ):
     # Lets initialize loss to some high value
     min_train_loss = min_val_loss = 100
@@ -141,10 +148,11 @@ def training_loop(
 
         model.train()
         # assuming loader will return image, label tuple
-        print("The type of training_loader is:",type(training_loader))
+        print("The type of training_loader is:", type(training_loader))
         for i, (images, labels) in enumerate(training_loader):
             print("\tMiniBatch {}:".format(i))
             minibatch_start = time.time()
+            #print("labels:", labels)
 
             minibatch_loss = minibatch_training_step(
                 model,
@@ -187,11 +195,11 @@ def training_loop(
             loss_training_calc, loss_validation_calc))
         print("\tEpoch Compute Time: {}".format(
             time.time() - epoch_start))
-        if((loss_training_calc < min_train_loss) | (loss_validation_calc < min_val_loss):
+        if loss_validation_calc < min_val_loss:
             print("*******Loss imrpoved*******")
             print("Saving the new best")
-            torch.save(model.state_dict(), 'model_team8.pt')
-            min_train_loss = min(min_train_loss,loss_training_calc)
-            min_val_loss = min(min_val_loss,loss_validation_calc)
+            torch.save(model.state_dict(), model_name)
+            min_train_loss = min(min_train_loss, loss_training_calc)
+            min_val_loss = min(min_val_loss, loss_validation_calc)
 
     return model, loss_training_agg, loss_validation_agg
