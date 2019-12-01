@@ -36,7 +36,11 @@ class ChexpertDataset(Dataset):
                  root_dir,
                  image_transform=None,
                  label_transform=None):
-        self.df = pd.read_csv(csv_file)
+        df = pd.read_csv(csv_file)
+
+        # Only use frontal images
+        self.df = df[df["Frontal/Lateral"] == "Frontal"]
+
         self.root_dir = root_dir
         self.label_transform = label_transform
         self.image_transform = image_transform
