@@ -26,7 +26,7 @@ torch.backends.cudnn.benchmark = False
 LR = 5e-3
 MOMENT = .9
 BATCH_SIZE = 16
-N_EPOCHS = 4
+N_EPOCHS = 5
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
@@ -40,7 +40,8 @@ N_EPOCHS = 4
 data_loader_params = {
     'batch_size': BATCH_SIZE,
     'shuffle': True,  # why not.. *shrug*?
-    'num_workers': 16}
+    'num_workers': 16,
+    'pin_memory': True}
 
 training_loader, validation_loader = build_data_loaders(
     base_label_transform,
