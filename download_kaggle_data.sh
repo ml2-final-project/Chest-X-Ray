@@ -1,6 +1,8 @@
 #!/bin/bash
 
-mkdir Data
+if [ ! -d "Data" ]; then
+	mkdir Data
+fi
 
 wget -bqco download_kaggle_data.log "https://ml2-final-project-data.s3.amazonaws.com/sample.zip" -O Data/sample.zip
 
