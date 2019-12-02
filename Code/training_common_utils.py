@@ -4,15 +4,26 @@ import time
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from CheXpertDataset import ChexpertDataset, UZerosTransform, UOnesTransform, ReplaceNaNTransform, GreyScale_to_RGB
+from CheXpertDataset import ChexpertDataset, \
+    UZerosTransform, UOnesTransform, ReplaceNaNTransform
+from ImageTransforms import PILToNumpy, FixRatioResize, EqualizeHistogram, Gray2RGB, GaussianBlur
 from torchvision import transforms
 from torch.utils.data import Subset, DataLoader
 
 image_preprocessing = transforms.Compose([
-    # GreyScale_to_RGB(),
-    transforms.Resize((600, 600)),
+    PILToNumpy(),
+    EqualizeHistogram(),
+    Gray2RGB(),
+    FixRatioResize(512, 128),
+    GaussianBlur(3),
     transforms.ToTensor(),
-    transforms.Normalize((0, 0, 0), (1.0, 1.0, 1.0))
+    transforms.Normalize((128, 128, 128), (64, 64, 64))
+])
+
+image_augmented_preprocessing = transforms.Compose([
+    transforms.RandomAffine(degrees=(-15, 15), translate=(0.05, 0.05),
+                            scale=(0.85, 1.05), fillcolor=128),
+    image_preprocessing
 ])
 
 label_preprocessing_uzeros = transforms.Compose([
@@ -44,7 +55,7 @@ def build_data_loaders(base_label_transform, dlparams):
     data_training = ChexpertDataset(
         csv_file='../Data/CheXpert-v1.0-small/train.csv',
         root_dir='../Data',
-        image_transform=image_preprocessing,
+        image_transform=image_augmented_preprocessing,
         label_transform=base_label_transform
     )
     # Note: this assumes data_validation and data_training are the same size
