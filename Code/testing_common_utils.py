@@ -3,10 +3,12 @@ from torchvision.models import densenet121
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+model_uzeros = "../Models/model_team8_uzeros.pt"
 
-def predict_on_test_data(test_data_loader):
+
+def predict_on_test_data(test_data_loader, model_file):
     # Load model
-    model_state_dict = torch.load("../Models/model_team8_uzeros.pt")
+    model_state_dict = torch.load(model_file)
 
     model = densenet121(num_classes=14).to(device)
 
