@@ -16,10 +16,12 @@ kaggle_data = KaggleDataset(
 kaggle_data_loader = DataLoader(kaggle_data)
 
 # Load model
-model_state_dict = torch.load("../Models/model_team8_uzeros_15epoch.pt")
+model_state_dict = torch.load("../Models/model_team8_uzeros.pt")
 
-model = densenet121(num_classes=14).load_state_dict(model_state_dict)
-model.eval()
+model = densenet121(num_classes=14)
+
+model.load_state_dict(model_state_dict)
+print(model.eval())
 
 # Classify inputs
 for i, t in kaggle_data_loader:
