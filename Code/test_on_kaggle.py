@@ -1,5 +1,4 @@
 from KaggleDataset import KaggleDataset
-from torch.autograd import Variable
 from training_common_utils import image_preprocessing
 import torch
 from torchvision.models import densenet121
@@ -7,6 +6,23 @@ from torch.utils.data import DataLoader
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
+def predict_on_test_data(test_data_loader):
+    # Load model
+    model_state_dict = torch.load("../Models/model_team8_uzeros.pt")
+
+    model = densenet121(num_classes=14).to(device)
+
+    model.load_state_dict(model_state_dict)
+
+    # Classify inputs
+    for images, labels in test_data_loader:
+        local_images, local_labels = images.to(device, dtype=torch.float), labels.to(device, dtype=torch.float)
+        preds = model(local_images)
+        print(preds)
+
+
+# Test on Kaggle
 kaggle_data = KaggleDataset(
     csv_file="../Data/sample/sample_labels.csv",
     root_dir="../Data/sample/images",
@@ -15,16 +31,4 @@ kaggle_data = KaggleDataset(
 
 kaggle_data_loader = DataLoader(kaggle_data)
 
-# Load model
-model_state_dict = torch.load("../Models/model_team8_uzeros.pt")
-
-model = densenet121(num_classes=14)
-
-model.load_state_dict(model_state_dict)
-print(model.eval())
-
-# Classify inputs
-for i, t in kaggle_data_loader:
-    inputs, targets = Variable(i), Variable(t)
-    outputs = model(inputs)
-
+predict_on_test_data(kaggle_data_loader)
