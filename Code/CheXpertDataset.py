@@ -57,9 +57,9 @@ class ChexpertDataset(Dataset):
             label = self.label_transform(label)
 
         if self.image_transform is not None:
-            im = self.image_transform(image)
+            image = self.image_transform(image)
 
-        return im, torch.from_numpy(np.array(label[label_columns].values.tolist()))
+        return image, torch.from_numpy(np.array(label[label_columns].values.tolist()))
 
 
 

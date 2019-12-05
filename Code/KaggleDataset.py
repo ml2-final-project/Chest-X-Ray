@@ -1,7 +1,10 @@
 import os
+
+import cv2
 import pandas as pd
 import numpy as np
 import torch
+from PIL import Image
 from keras.preprocessing.image import load_img
 from torch.utils.data import Dataset
 
@@ -29,7 +32,8 @@ class KaggleDataset(Dataset):
 
     def __getitem__(self, idx):
         image_path = self.df.iloc[idx, 0]
-        im = load_img(os.path.join(self.root_dir, image_path), target_size=(600, 600), interpolation='nearest')
+        image = cv2.imread(os.path.join(self.root_dir, image_path), 0)
+        image = Image.fromarray(image)
 
         label_list = self.df.iloc[idx, 1].split("|")
         encoded_labels = [0] * len(LABELS)
@@ -39,9 +43,9 @@ class KaggleDataset(Dataset):
                 encoded_labels[i] = 1
 
         if self.label_transform is not None:
-            label = self.label_transform(encoded_labels)
+            encoded_labels = self.label_transform(encoded_labels)
 
         if self.image_transform is not None:
-            im = self.image_transform(im)
+            image = self.image_transform(image)
 
-        return im, torch.from_numpy(np.array(encoded_labels))
+        return image, torch.from_numpy(np.array(encoded_labels))
