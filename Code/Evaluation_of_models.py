@@ -27,7 +27,6 @@ label_columns = [
 ]
 
 selected_labels = ['Cardiomegaly', 'Edema', 'Consolidation', 'Atelectasis','Pleural Effusion']
-index_list = [target_labels.index(label) for label in selected_labels]
 
 labels_uzeros, output_uzeros = predict("uzeros")
 proba_uzeros = [torch.nn.functional.softmax(out) for out in output_uzeros]
