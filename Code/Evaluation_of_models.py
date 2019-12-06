@@ -26,29 +26,33 @@ label_columns = [
     'Support Devices'
 ]
 
-selected_labels = ['Cardiomegaly', 'Edema', 'Consolidation', 'Atelectasis','Pleural Effusion']
+selected_labels = ['Cardiomegaly', 'Edema', 'Consolidation', 'Atelectasis', 'Pleural Effusion']
 
-labels_uzeros, output_uzeros = predict("uzeros")
-proba_uzeros = [torch.nn.functional.softmax(out) for out in output_uzeros]
-labels_uones, output_ones = predict("uones")
-proba_uones = [torch.nn.functional.softmax(out) for out in output_ones]
+output_uzeros, labels_uzeros = predict("uzeros")
+proba_uzeros = [torch.nn.functional.softmax(out).numpy() for out in output_uzeros]
 
+
+output_uones, labels_uones = predict("uones")
+proba_uones = [torch.nn.functional.softmax(out).numpy() for out in output_uones]
 
 compare_df = pd.DataFrame({"Labels": selected_labels})
 compare_df["Uzeros"] = [0]*len(compare_df)
 compare_df["Uones"] = [0]*len(compare_df)
 
 def get_auc_score(row):
+    print(row)
+    print(row.Labels)
     # for uzeros
-    y_predicts = [out[target_labels.index(row["Labels"])] for out in proba_uzeros]
-    y_actuals = [label[target_labels.index(row["Labels"])] for label in labels_uzeros]
+    y_predicts = [out[label_columns.index(row.Labels)] for out in proba_uzeros]
+    y_actuals = [label[label_columns.index(row.Labels)].numpy() for label in labels_uzeros]
     row["Uzeros"] = roc_auc_score(y_actuals, y_predicts)
     # for uones
-    y_predicts = [out[target_labels.index(row["Labels"])] for out in proba_ones]
-    y_actuals = [label[target_labels.index(row["Labels"])] for label in labels_ones]
+    y_predicts = [out[label_columns.index(row.Labels)] for out in proba_uones]
+    y_actuals = [label[label_columns.index(row.Labels)].numpy() for label in labels_uones]
     row["Uones"] = roc_auc_score(y_actuals, y_predicts)
+    return row
 
-comapre_df = compare_df.apply(get_auc_score)
+compare_df = compare_df.apply(get_auc_score, axis=1)
 print(compare_df)
 
 

@@ -23,10 +23,10 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 # %% ----------------------------------- Hyper Parameters --------------------------------------------------------------
-LR = 5e-3
+LR = 0.0001
 MOMENT = .9
 BATCH_SIZE = 16
-N_EPOCHS = 5
+N_EPOCHS = 15
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
@@ -39,7 +39,6 @@ N_EPOCHS = 5
 #   Color adjustments?
 data_loader_params = {
     'batch_size': BATCH_SIZE,
-    'shuffle': True,  # why not.. *shrug*?
     'num_workers': 16,
     'pin_memory': True}
 
@@ -52,12 +51,12 @@ training_loader, validation_loader = build_data_loaders(
 model = densenet121(num_classes=14).to(device)
 
 # TODO: Hyperparameter training for best LR, momentum settings?
-optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=.9)
+optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 
 # TODO: Need to update this? possibly not.
 criterion = nn.BCEWithLogitsLoss()
 
-scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', verbose=True)
+scheduler = lr_scheduler.StepLR(optimizer, 2, 0.1)
 
 # %% -------------------------------------- Training Loop ----------------------------------------------------------
 print("Training Starting")
