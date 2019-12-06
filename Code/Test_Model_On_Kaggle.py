@@ -8,7 +8,7 @@ from training_common_utils import image_preprocessing
 def predict(model_name):
     kaggle_data = KaggleDataset(
         csv_file="../Data/sample_labels.csv",
-        root_dir="../Data/images",
+        root_dir="../Data/sample/images",
         image_transform=image_preprocessing
     )
 
