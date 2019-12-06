@@ -1,12 +1,12 @@
 from torch.utils.data import DataLoader
 
-from Code.KaggleDataset import KaggleDataset
-from Code.testing_common_utils import predict_on_test_data, model_uzeros
-from Code.training_common_utils import image_preprocessing
+from KaggleDataset import KaggleDataset
+from testing_common_utils import predict_on_test_data, model_uzeros
+from training_common_utils import image_preprocessing
 
 kaggle_data = KaggleDataset(
-    csv_file="../Data/sample/sample_labels.csv",
-    root_dir="../Data/sample/images",
+    csv_file="../Data/sample_labels.csv",
+    root_dir="../Data/images",
     image_transform=image_preprocessing
 )
 
