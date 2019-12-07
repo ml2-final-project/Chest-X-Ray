@@ -46,13 +46,15 @@ training_loader, validation_loader = build_data_loaders(
 model = densenet121(num_classes=14).to(device)
 
 # comment this out to train the initial model.
-model.load_state_dict(torch.load('../Models/model_team8_uones_v2.pt'))
+model.load_state_dict(torch.load('../Models/model_team8_uones_v3.pt'))
 
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 
 criterion = nn.BCEWithLogitsLoss()
 
-scheduler = lr_scheduler.StepLR(optimizer, 2, 0.1)
+# by setting increment larger than num epochs we effectively
+#   get constant LR
+scheduler = lr_scheduler.StepLR(optimizer, N_EPOCHS + 10, 0.1)
 
 # %% -------------------------------------- Training Loop ----------------------------------------------------------
 print("Training Starting")
@@ -69,7 +71,7 @@ model, training_losses, validation_losses = training_loop(
     scheduler,
     device,
     N_EPOCHS,
-    "model_team8_uones_v3.pt"
+    "model_team8_uones_v4.pt"
 )
 
 print("Training Complete: {}s", time.time() - training_start)
@@ -81,4 +83,4 @@ plt.plot(validation_losses, color='red')
 plt.title("Loss vs Epochs")
 plt.xlabel("Epoch")
 plt.ylabel("Binary Cross Entropy with Logits Loss")
-plt.savefig('loss_v_epochs_uones_v3.png')
+plt.savefig('loss_v_epochs_uones_v4.png')
