@@ -76,7 +76,7 @@ model, training_losses, validation_losses = training_loop(
     scheduler,
     device,
     N_EPOCHS,
-    "model_team8_uzeros_v2.pt"
+    "model_team8_uzeros_v3.pt"
 )
 
 print("Training Complete: {}s", time.time() - training_start)
@@ -88,4 +88,4 @@ plt.plot(validation_losses, color='red')
 plt.title("Loss vs Epochs")
 plt.xlabel("Epoch")
 plt.ylabel("Binary Cross Entropy with Logits Loss")
-plt.savefig('loss_v_epochs_uzeros_v2.png')
+plt.savefig('loss_v_epochs_uzeros_v3.png')
