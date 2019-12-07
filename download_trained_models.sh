@@ -7,7 +7,7 @@ fi
 wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/model_team8_uzeros_15epoch.pt" -O Models/model_team8_uzeros_15epoch.pt
 wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/model_team8_uzeros.pt" -O Models/model_team8_uzeros_v1.pt
 wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/model_team8_uones.pt" -O Models/model_team8_uones_v1.pt
-wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/model_team8_uzeros_v2.pt" -O Models/model_team8_uones_v2.pt
+wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/model_team8_uzeros_v2.pt" -O Models/model_team8_uzeros_v2.pt
 
 # images
 wget -bqc "https://ml2-final-project-data.s3.amazonaws.com/loss_v_epochs_uones_v1.png" -O Models/loss_v_epochs_uones_v1.png
