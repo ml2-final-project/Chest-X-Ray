@@ -25,7 +25,7 @@ torch.backends.cudnn.benchmark = False
 # %% ----------------------------------- Hyper Parameters --------------------------------------------------------------
 LR = 0.0001
 MOMENT = .9
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 N_EPOCHS = 15
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
@@ -50,6 +50,9 @@ training_loader, validation_loader = build_data_loaders(
 # %% -------------------------------------- Training Prep ----------------------------------------------------------
 model = densenet121(num_classes=14).to(device)
 
+# comment this out to train the initial model.
+model.load_state_dict(torch.load('../Models/model_team8_uones_v2.pt'))
+
 # TODO: Hyperparameter training for best LR, momentum settings?
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 
@@ -73,7 +76,7 @@ model, training_losses, validation_losses = training_loop(
     scheduler,
     device,
     N_EPOCHS,
-    "model_team8_uones_v2.pt"
+    "model_team8_uones_v3.pt"
 )
 
 print("Training Complete: {}s", time.time() - training_start)
@@ -85,4 +88,4 @@ plt.plot(validation_losses, color='red')
 plt.title("Loss vs Epochs")
 plt.xlabel("Epoch")
 plt.ylabel("Binary Cross Entropy with Logits Loss")
-plt.savefig('loss_v_epochs_uones_v2.png')
+plt.savefig('loss_v_epochs_uones_v3.png')
