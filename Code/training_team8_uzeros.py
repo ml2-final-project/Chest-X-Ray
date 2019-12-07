@@ -25,18 +25,13 @@ torch.backends.cudnn.benchmark = False
 # %% ----------------------------------- Hyper Parameters --------------------------------------------------------------
 LR = 0.0001
 MOMENT = .9
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 N_EPOCHS = 15
 
 # %% -------------------------------------- Data Prep ------------------------------------------------------------------
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # And using various transforms provided by:
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
-
-# TODO: Data Augmentation?
-#   flipping probably wouldn't work well.
-#   neither would rotation, unless fairly small rotations?
-#   Color adjustments?
 data_loader_params = {
     'batch_size': BATCH_SIZE,
     'num_workers': 16,
@@ -50,10 +45,11 @@ training_loader, validation_loader = build_data_loaders(
 # %% -------------------------------------- Training Prep ----------------------------------------------------------
 model = densenet121(num_classes=14).to(device)
 
-# TODO: Hyperparameter training for best LR, momentum settings?
+# comment this out to train the initial model.
+model.load_state_dict(torch.load('../Models/model_team8_uzeros_v2.pt'))
+
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 
-# TODO: Need to update this? possibly not.
 criterion = nn.BCEWithLogitsLoss()
 
 scheduler = lr_scheduler.StepLR(optimizer, 2, 0.1)
@@ -73,7 +69,7 @@ model, training_losses, validation_losses = training_loop(
     scheduler,
     device,
     N_EPOCHS,
-    "model_team8_uzeros.pt"
+    "model_team8_uzeros_v3.pt"
 )
 
 print("Training Complete: {}s", time.time() - training_start)
@@ -85,4 +81,4 @@ plt.plot(validation_losses, color='red')
 plt.title("Loss vs Epochs")
 plt.xlabel("Epoch")
 plt.ylabel("Binary Cross Entropy with Logits Loss")
-plt.savefig('loss_v_epochs_uzeros.png')
+plt.savefig('loss_v_epochs_uzeros_v3.png')

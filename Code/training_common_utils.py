@@ -39,9 +39,6 @@ label_preprocessing_uones = transforms.Compose([
 label_preprocessing_umulticlass = ReplaceNaNTransform()
 
 
-# TODO: I imagine we'll want more args here for handling data loaders tied to other cases
-#   and for more complicated logic regarding which transforms to use?
-#   should we build up a context type object?
 def build_data_loaders(base_label_transform, dlparams):
     # Construct DataSet class for validation and training
     # Note: thinking to keep them separate to support possibility of data augmentations
@@ -144,14 +141,6 @@ def training_loop(
     loss_training_agg = []
     loss_validation_agg = []
     for epoch in range(num_epochs):
-        # Reduce training rate every 10 epochs
-        # TODO: Should we?
-        # TODO: Similar for momentum parameter?
-        # TODO: Could make of torch optim schedulers for this
-        # if epoch % 10 == 0:
-        #     LR = LR/2
-        #     optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
-
         loss_training = []
         epoch_start = time.time()
         print("Epoch {}:".format(epoch))

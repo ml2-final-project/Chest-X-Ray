@@ -4,9 +4,11 @@ import numpy as np
 from Test_Model_On_Chexpert import predict
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 import matplotlib.pyplot as plt
-output = torch.from_numpy(np.array([[-2.7946, -2.8696, -2.0371, -0.1423, -3.4820, -1.6071, -2.7869, -3.7146,
-         -1.7468, -2.4265, -0.6332, -4.3280, -3.2801,  0.1334]]))
-print((torch.nn.functional.softmax(output,dim=0)>0.5))
+
+output = torch.from_numpy(np.array([[
+    -2.7946, -2.8696, -2.0371, -0.1423, -3.4820, -1.6071, -2.7869, -3.7146,
+    -1.7468, -2.4265, -0.6332, -4.3280, -3.2801, 0.1334]]))
+print((torch.nn.functional.softmax(output, dim=0) > 0.5))
 ten = torch.from_numpy(np.array([]))
 
 label_columns = [
@@ -26,7 +28,11 @@ label_columns = [
     'Support Devices'
 ]
 
-selected_labels = ['Cardiomegaly', 'Edema', 'Consolidation', 'Atelectasis', 'Pleural Effusion']
+selected_labels = ['Cardiomegaly',
+                   'Edema',
+                   'Consolidation',
+                   'Atelectasis',
+                   'Pleural Effusion']
 
 output_uzeros, labels_uzeros = predict("uzeros")
 proba_uzeros = [torch.nn.functional.softmax(out).numpy() for out in output_uzeros]
@@ -38,6 +44,7 @@ proba_uones = [torch.nn.functional.softmax(out).numpy() for out in output_uones]
 compare_df = pd.DataFrame({"Labels": selected_labels})
 compare_df["Uzeros"] = [0]*len(compare_df)
 compare_df["Uones"] = [0]*len(compare_df)
+
 
 def get_auc_score(row):
     print(row)
@@ -51,6 +58,7 @@ def get_auc_score(row):
     y_actuals = [label[label_columns.index(row.Labels)].numpy() for label in labels_uones]
     row["Uones"] = roc_auc_score(y_actuals, y_predicts)
     return row
+
 
 compare_df = compare_df.apply(get_auc_score, axis=1)
 print(compare_df)

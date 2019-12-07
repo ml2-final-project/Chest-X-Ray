@@ -13,7 +13,14 @@ from torch.utils.data import Dataset
 # And using various transforms provided by:
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
 
-LABELS = ["Pneumonia", "Edema", "Cardiomegaly", "Consolidation", "Pneumothorax", "Atelectasis", "No Finding"]
+LABELS = [
+    "Pneumonia",
+    "Edema",
+    "Cardiomegaly",
+    "Consolidation",
+    "Pneumothorax",
+    "Atelectasis",
+    "No Finding"]
 
 
 class KaggleDataset(Dataset):
