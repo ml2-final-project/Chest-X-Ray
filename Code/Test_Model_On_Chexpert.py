@@ -6,9 +6,6 @@ from training_common_utils import image_preprocessing, label_preprocessing_uzero
 
 # TODO Should we be transforming the unknown and blanks here?  Or do we want to take into account when it is unknown?
 
-
-
-
 def predict(model_name):
         if(model_name == "uzeros"):
                 test_data = ChexpertDataset(

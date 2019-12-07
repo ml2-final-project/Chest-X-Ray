@@ -32,11 +32,6 @@ N_EPOCHS = 15
 # Custom Dataset class based on https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 # And using various transforms provided by:
 #   https://pytorch.org/docs/stable/torchvision/transforms.html
-
-# TODO: Data Augmentation?
-#   flipping probably wouldn't work well.
-#   neither would rotation, unless fairly small rotations?
-#   Color adjustments?
 data_loader_params = {
     'batch_size': BATCH_SIZE,
     'num_workers': 16,
@@ -53,10 +48,8 @@ model = densenet121(num_classes=14).to(device)
 # comment this out to train the initial model.
 model.load_state_dict(torch.load('../Models/model_team8_uones_v2.pt'))
 
-# TODO: Hyperparameter training for best LR, momentum settings?
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 
-# TODO: Need to update this? possibly not.
 criterion = nn.BCEWithLogitsLoss()
 
 scheduler = lr_scheduler.StepLR(optimizer, 2, 0.1)
