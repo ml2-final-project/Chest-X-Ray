@@ -17,9 +17,18 @@ def apply_uones(value):
     return value
 
 label_columns = ['No Finding',
-                 'Enlarged Cardiomediastinum', 'Cardiomegaly', 'Lung Opacity',
-                 'Lung Lesion', 'Edema', 'Consolidation', 'Pneumonia', 'Atelectasis',
-                 'Pneumothorax', 'Pleural Effusion', 'Pleural Other', 'Fracture',
+                 'Enlarged Cardiomediastinum',
+                 'Cardiomegaly',
+                 'Lung Opacity',
+                 'Lung Lesion',
+                 'Edema',
+                 'Consolidation',
+                 'Pneumonia',
+                 'Atelectasis',
+                 'Pneumothorax',
+                 'Pleural Effusion',
+                 'Pleural Other',
+                 'Fracture',
                  'Support Devices']
 
 # Labels in common with Kaggle:

@@ -25,7 +25,8 @@ def predict_on_test_data(test_data_loader, model_file):
         # Classify inputs
         for i, (images, labels) in enumerate(test_data_loader):
             print("predict on test data, minibatch: " + str(i))
-            local_images, local_labels = images.to(device, dtype=torch.float), labels.to(device, dtype=torch.float)
+            local_images, local_labels = images.to(device, dtype=torch.float),\
+                                         labels.to(device, dtype=torch.float)
             local_preds = model(local_images)
 
             preds = local_preds.to(cpu_device, dtype=torch.float)
