@@ -46,7 +46,7 @@ training_loader, validation_loader = build_data_loaders(
 model = densenet121(num_classes=14).to(device)
 
 # comment this out to train the initial model.
-model.load_state_dict(torch.load('../Models/model_team8_uzeros_v3.pt'))
+model.load_state_dict(torch.load('../Models/model_team8_uzeros_v4.pt'))
 
 optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=MOMENT)
 

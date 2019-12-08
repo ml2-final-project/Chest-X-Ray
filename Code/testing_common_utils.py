@@ -4,7 +4,7 @@ import numpy as np
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-model_uzeros = "../Models/model_team8_uzeros_v2.pt"
+model_uzeros = "../Models/model_team8_uzeros_v4.pt"
 model_uones = "../Models/model_team8_uones_v3.pt"
 
 
