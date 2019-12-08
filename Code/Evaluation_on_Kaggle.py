@@ -23,11 +23,13 @@ label_columns = [
 ]
 
 output_uzeros, labels_uzeros = predict(model_name="uzeros")
-proba_uzeros = [torch.nn.functional.softmax(out).numpy() for out in output_uzeros]
+# proba_uzeros = [torch.nn.functional.softmax(out).numpy() for out in output_uzeros]
+proba_uzeros = [torch.sigmoid(out).numpy() for out in output_uzeros]
 
 
 output_uones, labels_uones = predict("uones")
-proba_uones = [torch.nn.functional.softmax(out).numpy() for out in output_uones]
+# proba_uones = [torch.nn.functional.softmax(out).numpy() for out in output_uones]
+proba_uones = [torch.sigmoid(out).numpy() for out in output_uones]
 
 compare_df = pd.DataFrame({"Labels": LABELS})
 compare_df["Uzeros"] = [0]*len(compare_df)
