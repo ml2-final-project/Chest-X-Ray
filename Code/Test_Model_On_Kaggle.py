@@ -12,7 +12,7 @@ def predict(model_name):
         image_transform=image_preprocessing
     )
 
-    kaggle_data_loader = DataLoader(kaggle_data)
+    kaggle_data_loader = DataLoader(kaggle_data,batch_size=64, pin_memory=True, num_workers=16)
 
     if model_name == "uzeros":
         return predict_on_test_data(kaggle_data_loader, model_uzeros)

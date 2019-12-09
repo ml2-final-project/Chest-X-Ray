@@ -5,7 +5,7 @@ import numpy as np
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 model_uzeros = "../Models/model_team8_uzeros_v4.pt"
-model_uones = "../Models/model_team8_uones_v3.pt"
+model_uones = "../Models/model_team8_uones_v4.pt"
 
 
 def predict_on_test_data(test_data_loader, model_file):
@@ -31,8 +31,8 @@ def predict_on_test_data(test_data_loader, model_file):
 
             preds = local_preds.to(cpu_device, dtype=torch.float)
 
-            print(preds.shape, preds.dtype)
-            print(labels.shape, labels.dtype)
+            # print(preds.shape, preds.dtype)
+            # print(labels.shape, labels.dtype)
 
             outputs = torch.cat((outputs, preds), 0)
             target_labels = torch.cat((target_labels, labels.float()), 0)
