@@ -51,7 +51,7 @@ def get_auc_score(row):
     return row
 
 compare_df = compare_df.apply(get_auc_score, axis=1)
-print(compare_df.iloc[:,0:2])
-print(compare_df.iloc[:,2:])
+print(compare_df.iloc[:, 0:2])
+print(compare_df.iloc[:, 2:])
 
 

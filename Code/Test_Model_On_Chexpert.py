@@ -14,7 +14,7 @@ def predict(model_name):
                         image_transform=image_preprocessing,
                         label_transform=label_preprocessing_uzeros
                 )
-                test_data_loader = DataLoader(test_data, batch_size=64, pin_memory = True, num_workers=16)
+                test_data_loader = DataLoader(test_data, batch_size=64, pin_memory=True, num_workers=16)
                 return predict_on_test_data(test_data_loader, model_uzeros)
         else:
                 test_data = ChexpertDataset(
@@ -23,5 +23,5 @@ def predict(model_name):
                         image_transform=image_preprocessing,
                         label_transform=label_preprocessing_uones
                 )
-                test_data_loader = DataLoader(test_data)
+                test_data_loader = DataLoader(test_data, batch_size=64, pin_memory=True, num_workers=16)
                 return predict_on_test_data(test_data_loader, model_uones)
