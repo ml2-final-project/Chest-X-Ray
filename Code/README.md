@@ -18,13 +18,13 @@ Summary of files, and sections pertaining to them.
 
 ## Custom Datasets
 
-The [CheXpertDataset.py](Code/CheXpertDataset.py) file defines the custom Dataset object we used to construct pytorch DataLoaders for the CheXpertDataset.
+The [CheXpertDataset.py](CheXpertDataset.py) file defines the custom Dataset object we used to construct pytorch DataLoaders for the CheXpertDataset.
 
-The [KaggleDataset.py](Code/KaggleDataset.py) file defines the custom Dataset object we used to construct pytorch DataLoaders for the KaggleDataset.
+The [KaggleDataset.py](KaggleDataset.py) file defines the custom Dataset object we used to construct pytorch DataLoaders for the KaggleDataset.
 
 ## Transforms
 
-The majority of our custom transform code is found in [ImageTransforms.py](Code/ImageTransforms.py). Some transforms being used directly from torchvision, as provided, are setup in the [training_common_utils.py](Code/training_common_utils.py) file.
+The majority of our custom transform code is found in [ImageTransforms.py](ImageTransforms.py). Some transforms being used directly from torchvision, as provided, are setup in the [training_common_utils.py](training_common_utils.py) file.
 
 Label transforms are defined in the [CheXpertDataset.py](CheXpertDataset.py), and [KaggleDataset.py](KaggleDataset.py) files, and initialized in the [training_common_utils.py](training_common_utils.py).
 
