@@ -4,7 +4,7 @@ Github Repository for Group 8's Machine Learning 2 Final Project
 
 - [Our Proposal](Group-Proposal/ML2%20Final%20Project%20Proposal.pdf) (Now OBE)
 - [Our Paper](Final-Group-Project-Report/project_report.pdf)
-- [Our Presentation](Final-Group-Presentation/project_presentation.pdf)
+- [Our Presentation](Final-Group-Presentation/presentation_team8.pdf)
 
 ## Getting the Data
 
