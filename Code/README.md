@@ -30,7 +30,7 @@ Label transforms are defined in the [CheXpertDataset.py](CheXpertDataset.py), an
 
 ## Training
 
-The primary training code, is found in [training_team8_uones.py](training_team8_uones.py) and the [training_team8_uzeros.py](training_team8_uzeros.py) files, which correspond with label precoprocessing using the uones, and uzeros strategies respectively.
+The primary training code, is found in [training_team8_uones.py](training_team8_uones.py) and the [training_team8_uzeros.py](training_team8_uzeros.py) files, which correspond with label preprocessing using the uones, and uzeros strategies respectively.
 
 These two file invoke functions defined in [training_common_utils.py](training_common_utils.py), which exists to avoid duplication (and error).
 
