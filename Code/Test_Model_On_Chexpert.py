@@ -4,7 +4,6 @@ from CheXpertDataset import ChexpertDataset
 from testing_common_utils import predict_on_test_data, model_uzeros, model_uones
 from training_common_utils import image_preprocessing, label_preprocessing_uzeros, label_preprocessing_uones
 
-# TODO Should we be transforming the unknown and blanks here?  Or do we want to take into account when it is unknown?
 
 def predict(model_name):
         if(model_name == "uzeros"):
