@@ -30,7 +30,7 @@ Label transforms are defined in the [CheXpertDataset.py](CheXpertDataset.py), an
 
 ## Training
 
-The primary training code, is found in [training_team8_uones.py](training_team8_uones.py) and the [training_team8_uzeros.py](training_team8_uzeros.py) files, which correspond with label procprocessing using the uones, and uzeros strategies respectively.
+The primary training code, is found in [training_team8_uones.py](training_team8_uones.py) and the [training_team8_uzeros.py](training_team8_uzeros.py) files, which correspond with label precoprocessing using the uones, and uzeros strategies respectively.
 
 These two file invoke functions defined in [training_common_utils.py](training_common_utils.py), which exists to avoid duplication (and error).
 
@@ -39,5 +39,3 @@ These two file invoke functions defined in [training_common_utils.py](training_c
 The primary testing code, is found in [Evaluation_of_models.py](Evaluation_of_models.py) and [Evaluation_on_Kaggle.py](Evaluation_on_Kaggle.py) files, which correspond with testing both the UZeros, and UOnes based models on the Chexpert and Kaggle datasets respectively. 
 
 These two files invoke functions defined in both [Test_Model_On_Chexpert.py](Test_Model_On_Chexpert.py) and [Test_Model_On_Kaggle.py](Evaluation_on_Kaggle.py). Those two files then invoke functions defined in the [testing_common_utils.py](testing_common_utils.py) file. All of these additional files exist to avoid duplication and generally reduce error-prone copy-pasting. 
-
-
